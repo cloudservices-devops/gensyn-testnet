@@ -12,11 +12,14 @@ HOME_DIR="$HOME"
 
 cd "$HOME"
 
+if [ ! -d "$SWARM_DIR" ]; then
+    mkdir -p "$SWARM_DIR"
+fi
+
 if [ -f "$SWARM_DIR/swarm.pem" ]; then
     echo -e "${BOLD}${YELLOW}You already have an existing ${GREEN}swarm.pem${YELLOW} file.${NC}\n"
     echo -e "${BOLD}${YELLOW}Auto-selecting option 1: Use existing swarm.pem...${NC}"
 
-    
     mv "$SWARM_DIR/swarm.pem" "$HOME_DIR/"
     mv "$TEMP_DATA_PATH/userData.json" "$HOME_DIR/" 2>/dev/null
     mv "$TEMP_DATA_PATH/userApiKey.json" "$HOME_DIR/" 2>/dev/null
@@ -26,6 +29,11 @@ if [ -f "$SWARM_DIR/swarm.pem" ]; then
     echo -e "${BOLD}${YELLOW}[✓] Cloning fresh repository...${NC}"
     cd "$HOME" && git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
 
+    if [ ! -d "gensyn-testnet" ]; then
+        echo -e "${BOLD}${RED}[✗] Failed to clone gensyn-testnet repository.${NC}"
+        exit 1
+    fi
+
     mv "$HOME_DIR/swarm.pem" rl-swarm/
     mv "$HOME_DIR/userData.json" rl-swarm/modal-login/temp-data/ 2>/dev/null
     mv "$HOME_DIR/userApiKey.json" rl-swarm/modal-login/temp-data/ 2>/dev/null
@@ -34,6 +42,10 @@ else
     echo -e "${BOLD}${YELLOW}[✓] No existing swarm.pem found. Cloning repository...${NC}"
     cd "$HOME" && [ -d rl-swarm ] && rm -rf rl-swarm
     git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
+    if [ ! -d "gensyn-testnet" ]; then
+        echo -e "${BOLD}${RED}[✗] Failed to clone gensyn-testnet repository.${NC}"
+        exit 1
+    fi
 fi
 
 cd rl-swarm || { echo -e "${BOLD}${RED}[✗] Failed to enter rl-swarm directory. Exiting.${NC}"; exit 1; }
