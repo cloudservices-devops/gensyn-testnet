@@ -12,7 +12,9 @@ HOME_DIR="$HOME"
 
 cd "$HOME"
 
+# Check if rl-swarm directory exists, create it if it doesn't
 if [ ! -d "$SWARM_DIR" ]; then
+    echo -e "${BOLD}${YELLOW}[✓] Creating rl-swarm directory...${NC}"
     mkdir -p "$SWARM_DIR"
 fi
 
@@ -29,23 +31,20 @@ if [ -f "$SWARM_DIR/swarm.pem" ]; then
     echo -e "${BOLD}${YELLOW}[✓] Cloning fresh repository...${NC}"
     cd "$HOME" && git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
 
-    if [ ! -d "gensyn-testnet" ]; then
-        echo -e "${BOLD}${RED}[✗] Failed to clone gensyn-testnet repository.${NC}"
-        exit 1
+    # Ensure the rl-swarm directory exists before moving files
+    if [ ! -d "$SWARM_DIR" ]; then
+        echo -e "${BOLD}${YELLOW}[✓] Creating rl-swarm directory inside the cloned repository...${NC}"
+        mkdir -p "$SWARM_DIR"
     fi
 
-    mv "$HOME_DIR/swarm.pem" rl-swarm/
-    mv "$HOME_DIR/userData.json" rl-swarm/modal-login/temp-data/ 2>/dev/null
-    mv "$HOME_DIR/userApiKey.json" rl-swarm/modal-login/temp-data/ 2>/dev/null
+    mv "$HOME_DIR/swarm.pem" "$SWARM_DIR/"
+    mv "$HOME_DIR/userData.json" "$SWARM_DIR/modal-login/temp-data/" 2>/dev/null
+    mv "$HOME_DIR/userApiKey.json" "$SWARM_DIR/modal-login/temp-data/" 2>/dev/null
 
 else
     echo -e "${BOLD}${YELLOW}[✓] No existing swarm.pem found. Cloning repository...${NC}"
     cd "$HOME" && [ -d rl-swarm ] && rm -rf rl-swarm
     git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
-    if [ ! -d "gensyn-testnet" ]; then
-        echo -e "${BOLD}${RED}[✗] Failed to clone gensyn-testnet repository.${NC}"
-        exit 1
-    fi
 fi
 
 cd rl-swarm || { echo -e "${BOLD}${RED}[✗] Failed to enter rl-swarm directory. Exiting.${NC}"; exit 1; }
