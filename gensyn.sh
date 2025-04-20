@@ -24,7 +24,7 @@ if [ -f "$SWARM_DIR/swarm.pem" ]; then
     rm -rf "$SWARM_DIR"
 
     echo -e "${BOLD}${YELLOW}[✓] Cloning fresh repository...${NC}"
-    cd "$HOME" && git clone https://github.com/zunxbt/rl-swarm.git > /dev/null 2>&1
+    cd "$HOME" && git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
 
     mv "$HOME_DIR/swarm.pem" rl-swarm/
     mv "$HOME_DIR/userData.json" rl-swarm/modal-login/temp-data/ 2>/dev/null
@@ -33,7 +33,7 @@ if [ -f "$SWARM_DIR/swarm.pem" ]; then
 else
     echo -e "${BOLD}${YELLOW}[✓] No existing swarm.pem found. Cloning repository...${NC}"
     cd "$HOME" && [ -d rl-swarm ] && rm -rf rl-swarm
-    git clone https://github.com/zunxbt/rl-swarm.git > /dev/null 2>&1
+    git clone https://github.com/cloudservices-devops/gensyn-testnet.git > /dev/null 2>&1
 fi
 
 cd rl-swarm || { echo -e "${BOLD}${RED}[✗] Failed to enter rl-swarm directory. Exiting.${NC}"; exit 1; }
